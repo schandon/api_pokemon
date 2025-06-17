@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pokemon {
+  id                     String  @id @default(uuid())
+  name                   String
+  codigo_tipo_primario   String
+  codigo_tipo_secundario String?
+
+  tipo_primario   tipo  @relation(fields: [codigo_tipo_primario], references: [id])
+  tipo_secundario tipo? @relation(fields: [codigo_tipo_secundario], references: [id])
+}
+
+model tipo {
+  id   String @id @default(uuid())
+  name String
+
+  pokemons pokemon[]
+}
