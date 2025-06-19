@@ -8,7 +8,7 @@ export class PokemonRepository {
     return await prisma.pokemon.findMany();
   }
 
-  async findById(id: string): Promise<IPokemon | null> {
+  async findById(id: number): Promise<IPokemon | null> {
     return await prisma.pokemon.findUnique({
       where: { id },
     });
@@ -25,17 +25,24 @@ export class PokemonRepository {
     });
   }
 
-  async saveMany(data: IPokemon[]): Promise<IPokemon> {
-    return await prisma.pokemon.create({
+  async saveMany(data: IPokemon[]) {
+    return await prisma.pokemon.createMany({
       data: data,
     });
   }
 
-  async delete(id: string): Promise<void> {
-    return await prisma.pokemon.delete({ where: { id: id } });
+  async delete(id: number): Promise<void> {
+    try {
+      await prisma.pokemon.delete({ where: { id: id } });
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new Error(`Tipo with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
-  async update(id: string, data: IPokemon): Promise<IPokemon> {
+  async update(id: number, data: IPokemon): Promise<IPokemon> {
     return await prisma.pokemon.update({
       where: { id },
       data: {

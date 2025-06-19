@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -9,18 +8,19 @@ datasource db {
 }
 
 model pokemon {
-  id                 String  @id @default(uuid())
-  name               String
+  id   Int    @id
+  name String @unique
+
   fk_tipo_primario   String
   fk_tipo_secundario String?
 
-  tipo_primario   tipo  @relation("PokemonTipoPrimario", fields: [fk_tipo_primario], references: [id])
-  tipo_secundario tipo? @relation("PokemonTipoSecundario", fields: [fk_tipo_secundario], references: [id])
+  tipo_primario   tipo  @relation("PokemonTipoPrimario", fields: [fk_tipo_primario], references: [name])
+  tipo_secundario tipo? @relation("PokemonTipoSecundario", fields: [fk_tipo_secundario], references: [name])
 }
 
 model tipo {
-  id   String @id @default(uuid())
-  name String
+  id   Int    @id
+  name String @unique
 
   pokemon_primario   pokemon[] @relation("PokemonTipoPrimario")
   pokemon_secundario pokemon[] @relation("PokemonTipoSecundario")

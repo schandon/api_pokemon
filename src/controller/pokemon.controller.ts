@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { PokemonService } from '../service/pokemon.service';
 import { IPokemon } from '../dto/pokemon.dto';
 
@@ -20,13 +20,12 @@ export class PokemonController {
 
   async getPokemonById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
+    const numericId = parseInt(id, 10);
+    const pokemon = await this.pokemonService.getId(numericId);
     try {
-      const pokemon = await this.pokemonService.getId(id);
-
       if (!pokemon) {
         res.status(404).json({ message: 'Pokemon not found!' });
       }
-
       return res.status(200).json(pokemon);
     } catch {
       return res.status(400).json({ message: 'Internal Error!' });
@@ -55,11 +54,9 @@ export class PokemonController {
       }
 
       const created_pokemon = this.pokemonService.createMany(data);
-      return res.status(204).json(created_pokemon);
+      return res.status(201).json(created_pokemon);
     } catch {
-      return res
-        .status(400)
-        .json({ messagem: 'Erro on Creating Many Pokemons' });
+      return res.status(400).json({ messagem: 'Erro on Creating Many Pokemons' });
     }
   }
 
@@ -67,9 +64,10 @@ export class PokemonController {
     const { id } = req.params;
     const data = req.body;
     try {
-      const updated_pokemon = await this.pokemonService.update(id, data);
+      const numericId = parseInt(id, 10);
+      const updated_pokemon = await this.pokemonService.update(numericId, data);
 
-      return res.status(200).json(updated_pokemon);
+      return res.status(201).json(updated_pokemon);
     } catch {
       return res.status(400).json({ message: 'Erro on Updating Pokemon' });
     }
@@ -78,7 +76,8 @@ export class PokemonController {
   async deletePokemon(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     try {
-      const id_deleted = this.pokemonService.delete(id);
+      const numericId = parseInt(id, 10);
+      const id_deleted = this.pokemonService.delete(numericId);
       return res.status(200).json(id_deleted);
     } catch {
       return res.status(400).json({ message: 'Erro on Deleting Pokemon' });

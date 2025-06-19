@@ -12,7 +12,7 @@ export class PokemonService {
     return await this.pokemonRepository.findAll();
   }
 
-  async getId(id: string): Promise<IPokemon | null> {
+  async getId(id: number): Promise<IPokemon | null> {
     return await this.pokemonRepository.findById(id);
   }
 
@@ -24,11 +24,11 @@ export class PokemonService {
     return await this.pokemonRepository.saveMany(data);
   }
 
-  async update(id: string, data: IPokemon): Promise<IPokemon> {
+  async update(id: number, data: IPokemon): Promise<IPokemon> {
     return await this.pokemonRepository.update(id, data);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.pokemonRepository.delete(id);
   }
 }

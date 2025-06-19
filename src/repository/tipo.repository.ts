@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { ITipo } from '../dto/tipo.dto';
+import { ITipo } from '@dto/tipo.dto';
 
 const prisma = new PrismaClient();
 
@@ -8,9 +8,15 @@ export class TipoRepository {
     return await prisma.tipo.findMany();
   }
 
-  async findById(id: string): Promise<ITipo | null> {
+  async findById(id: number): Promise<ITipo | null> {
     return await prisma.tipo.findUnique({
       where: { id },
+    });
+  }
+
+  async findByName(name: string): Promise<ITipo | null> {
+    return await prisma.tipo.findFirst({
+      where: { name },
     });
   }
 
@@ -23,17 +29,24 @@ export class TipoRepository {
     });
   }
 
-  async saveMany(data: ITipo[]): Promise<ITipo> {
-    return await prisma.tipo.create({
+  async saveMany(data: ITipo[]) {
+    return await prisma.tipo.createMany({
       data: data,
     });
   }
 
-  async delete(id: string): Promise<void> {
-    return await prisma.tipo.delete({ where: { id: id } });
+  async delete(id: number): Promise<void> {
+    try {
+      await prisma.tipo.delete({ where: { id: id } });
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new Error(`Tipo with id ${id} not found`);
+      }
+      throw error;
+    }
   }
 
-  async update(id: string, data: ITipo): Promise<ITipo> {
+  async update(id: number, data: ITipo): Promise<ITipo> {
     return await prisma.tipo.update({
       where: { id },
       data: {
