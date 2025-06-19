@@ -37,7 +37,7 @@ o Front-end da aplicação estará disponibilizado em [Repositório Frontend](ht
 
 ### Rotas
 
-#### Pokemons
+#### 🐦‍🔥Pokemons
 
 ##### GET
 
@@ -87,7 +87,7 @@ o Front-end da aplicação estará disponibilizado em [Repositório Frontend](ht
 
 - `/pokemon/1` - Deleta as informações que foram criadas na base.
 
-#### Tipos
+#### 🗂️Tipos
 
 ##### GET
 
